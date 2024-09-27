@@ -1,0 +1,283 @@
+1. 전역 스코프와 함수 스코프에 대한 이해
+
+var x = 10;
+
+function example() {
+  console.log(x);
+  var x = 20;
+  console.log(x);
+}
+
+example();
+
+출력 결과: 1. undefined, 2. 20
+이유: 함수에서 var x가 선언되었기 때문에 스코프에서 호이스팅이 발생합니다. var x = 20;은 변수 선언이 함수 상단으로 끌어올려져 var x;가 먼저 실행됩니다. 
+따라서 첫 번째 console.log(x)는 undefined를 출력, 두 번째 console.log(x)는 20을 출력합니다.
+
+2. IIFE(즉시 실행 함수) 동작 이해
+
+(function() {
+  var a = 5;
+  console.log(a);
+})();
+
+console.log(a);
+출력 결과: 1. 5   2. ReferenceError: a is not defined
+이유: 즉시 실행 함수(IIFE)는 함수 내부의 스코프에서 실행되므로, 외부에서 a에 접근할 수 없습니다. 
+        함수 내부에서는 5가 출력되지만, 함수 외부에서 a를 호출하면 ReferenceError가 발생합니다.
+
+3. this 바인딩 규칙 1: 전역 컨텍스트
+
+function showThis() {
+  console.log(this);
+}
+
+showThis();
+출력 결과: window 객체 (or 전역 객체)
+이유: 전역 컨텍스트에서 호출되었으므로 this는 전역 객체인 window를 가리킵니다.
+
+4. this 바인딩 규칙 2: 메서드 호출
+
+const car = {
+  brand: 'Toyota',
+  displayBrand() {
+    console.log(this.brand);
+  }
+};
+
+car.displayBrand();
+출력 결과: Toyota
+이유: displayBrand는 car 객체의 메서드로 호출되었기 때문에, this는 car 객체입니다. 
+        따라서 this.brand는 'Toyota'가됩니다.
+
+5. call()을 사용한 명시적 바인딩
+
+const person = { name: 'Gyejin' };
+
+function sayHello() {
+  console.log(`Hello, ${this.name}`);
+}
+
+sayHello.call(person);
+출력 결과: Hello, Gyejin
+이유: call() 메서드를 사용하면 this를 명시적으로 person 객체로 바인딩할 수 있습니다. 
+        따라서 this.name은 person.name, 즉 'Gyejin'이 됩니다.
+
+6. bind() 메서드를 활용한 바인딩
+
+function greet() {
+  console.log(`Hello, ${this.name}`);
+}
+
+const person = { name: 'Gyejin' };
+const boundGreet = greet.bind(person);
+
+boundGreet();
+출력 결과: Hello, Gyejin
+이유: bind()는 새로운 함수를 반환하며, 이 함수는 this가 person 객체에 바인딩된 상태입니다.
+        boundGreet()가 호출될 때 this.name은 'Gyejin'을 가리킵니다.
+
+7. 프로토타입 상속
+
+function Animal(type) {
+  this.type = type;
+}
+
+Animal.prototype.speak = function() {
+  console.log(`${this.type} makes a sound.`);
+};
+
+const dog = new Animal('Dog');
+
+dog.speak();
+출력 결과: Dog makes a sound.
+이유: dog 객체는 Animal의 인스턴스이며, 프로토타입 체인을 통해 speak() 메서드를 상속받습니다.
+        this.type은 dog 객체의 type 속성인 'Dog'입니다.
+
+8. 콜 스택과 비동기 함수의 순서
+
+console.log('Start');
+
+setTimeout(() => {
+  console.log('Timeout');
+}, 1000);
+
+console.log('End');
+출력 결과: 1. Start   2. End  3. Timeout
+이유: setTimeout은 비동기 함수이므로, 콜백 함수는 이벤트 루프를 통해 1초 후에 실행됩니다. 
+        먼저 동기적인 1. console.log('Start')와  2. console.log('End')가 실행된 후, 1초 후에 3. console.log('Timeout')이 출력됩니다.
+
+9. 마이크로태스크 큐와 태스크 큐의 차이
+
+console.log('Start');
+
+setTimeout(() => {
+  console.log('Timeout');
+}, 0);
+
+Promise.resolve().then(() => {
+  console.log('Promise');
+});
+
+console.log('End');
+출력 결과: 1. Start  2. End 3. Promise 4.Timeout
+이유: Promise의 .then()은 마이크로태스크 큐에서 처리되므로, setTimeout보다 먼저 실행됩니다. 
+        먼저 동기적인 1. Start와 2. End가 출력되고, 
+        3. 마이크로태스크 큐에 있는 Promise가 출력됩니다. 
+        4. 마지막으로 태스크 큐에 있는 setTimeout의 콜백이 실행되어 Timeout이 출력됩니다.
+
+
+10. Strict 모드에서의 오류 탐지
+
+"use strict";
+
+x = 5;
+
+console.log(x);
+
+출력결과: ReferenceError: x is not defined
+
+이유: strict 모드에서는 변수를 선언해야합니다!
+         x 변수가 선언되지 않았기 때문에 ReferenceError가 발생합니다.
+
+11. 클로저를 이용한 상태 유지
+
+function createCounter() {
+  let count = 0;
+
+  return function() {
+    count++;
+    console.log(count);
+  };
+}
+
+const counter = createCounter();
+
+counter();
+counter();
+출력 결과: 1. 1 2. 2
+이유: 클로저는 함수가 생성될 때의 환경을 기억합니다. counter는 createCounter 함수의 내부 상태를 기억하고 있기 때문에, count 변수는 함수 호출 시마다 증가하며 그 값이 유지됩니다.
+
+12. 화살표 함수에서의 this 바인딩
+
+const person = {
+  name: 'Gyejin',
+  greet: () => {
+    console.log(this.name);
+  }
+};
+
+person.greet();
+출력 결과: undefined
+이유: 화살표 함수는 this를 자신의 Lexical 환경에서 상속받습니다.
+        화살표 함수에서의 this는 전역 객체이고, 전역 객체에는 name 속성이 없기 때문에 undefined가 출력됩니다.
+
+13. setTimeout과 this 바인딩 문제 해결
+
+const user = {
+  name: 'Gyejin',
+  greet() {
+    setTimeout(function() {
+      console.log(this.name);
+    }, 1000);
+  }
+};
+
+user.greet();
+출력 결과: undefined
+
+이유: setTimeout 안의 콜백 함수는 전역 객체에서 실행합다. 
+        이를 해결하기 위해 this를 변수에 저장하거나, 화살표 함수를 사용해야 합니다.
+
+14. Promise의 기본 이해
+
+const promise = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    resolve('Success');
+  }, 1000);
+});
+
+promise.then((result) => {
+  console.log(result);
+});
+출력 결과: Success
+이유: Promise가 1초 후에 resolve되면 .then() 블록이 실행되어 result에 전달된 값인 'Success'가 출력됩니다.
+
+15. async/await를 이용한 비동기 함수 제어
+
+async function fetchData() {
+  const data = await new Promise((resolve) => {
+    setTimeout(() => {
+      resolve('Fetched Data');
+    }, 1000);
+  });
+
+  console.log(data);
+}
+
+fetchData();
+출력 결과: Fetched Data
+
+이유: async/await는 비동기 코드를 동기적으로 작성할 수 있게 해줍니다.
+        await는 Promise가 해결될 때까지 기다리며, 1초 후에 'Fetched Data'가 출력됩니다.
+
+16. 호이스팅이 발생하는 경우
+console.log(a);
+
+var a = 10;
+출력 결과: undefined
+
+이유: var로 선언된 변수는 호이스팅되지만 초기화는 선언문 이후에 이루어집니다. 
+       변수 선언은 위로 올라오지만, 할당이 이루어지지 않아 undefined가 출력됩니다.
+
+17. let과 const에서의 호이스팅 차이
+console.log(b);
+
+let b = 10;
+출력 결과: ReferenceError: Cannot access 'b' before initialization
+
+이유: let으로 선언된 변수도 호이스팅되지만, 변수가 실제로 초기화되기 전까지는 
+        TDZ에 위치하게 되어 접근할 수 없습니다. 초기화되기 전에 변수를 사용하면 오류가 발생합니다.
+
+18. 생성자 함수에서 this의 역할
+function Car(model) {
+  this.model = model;
+}
+
+const myCar = new Car('Tesla');
+
+console.log(myCar.model);
+출력 결과: Tesla
+이유: 생성자 함수에서 this는 새로운 인스턴스 객체를 가리킵니다. 
+        myCar 객체는 Car 생성자의 인스턴스이며, this.model은 myCar의 model 속성인 'Tesla'를 가리킵니다.
+
+19. 이벤트 루프의 동작 원리
+console.log('Start');
+
+setTimeout(() => {
+  console.log('Timeout');
+}, 0);
+
+console.log('End');
+출력 결과: 1. Start   2. End  3. Timeout
+이유: 이벤트 루프는 동기 코드를 먼저 실행하고, 그 후에 비동기 콜백을 처리합니다. 
+         setTimeout의 콜백은 태스크 큐로 이동하여, 동기 코드가 모두 실행된 후에 처리됩니다.
+         1. Start와 2. End가 출력된이후에 3. Timeout이 출력됩니다.
+
+20. 프로미스 체인의 동작 이해
+new Promise((resolve, reject) => {
+  setTimeout(() => {
+    resolve('First Promise');
+  }, 1000);
+})
+  .then((result) => {
+    console.log(result);
+    return 'Second Promise';
+  })
+  .then((result) => {
+    console.log(result);
+  });
+출력 결과: 1.First Promise  2. Second Promise
+이유: 첫 번째 Promise가 1초 후에 resolve되면 첫 번째 .then()이 실행되어 'First Promise'를 출력하고 'Second Promise'를 반환합니다. 
+        이후 두 번째 .then()이 실행되어 'Second Promise'를 출력합니다.
+
