@@ -1,0 +1,154 @@
+1. JSON 직렬화와 undefined 처리
+
+JSON.stringify() 메서드는 객체 내에서 undefined 속성을 어떻게 처리할까요?
+undefined는직렬화된 JSON 문자열에서 제거합니다.
+
+const 객체 = { a: 1, b: undefined };
+console.log(JSON.stringify(객체)); // '{"a":1}'
+
+2. 배열 내의 undefined 값 처리
+
+배열의 요소 중 undefined 값이 포함된 경우, JSON.stringify()는 이를 어떻게 처리할까요?
+null로 변환하여 직렬화합니다.
+
+const arr = [1, undefined, 3];
+console.log(JSON.stringify(arr)); // '[1,null,3]'
+
+3. Date 객체의 직렬화 결과
+
+JSON.stringify()로 직렬화할 때 Date 객체는 어떤 형식으로 변환됩니까?
+ISO 8601 형식의 문자열로 변환합니다.
+
+const date = new Date();
+console.log(JSON.stringify(date)); 
+
+4. Date 객체의 복원
+
+JSON.parse(JSON.stringify(new Date()))의 실행 결과는 무엇입니까?
+문자열로 직렬화된 날짜 데이터를 포함하지만, 이를 다시 Date 객체로 자동 복원하지 않습니다. 
+
+const date = new Date();
+const parsedDate = JSON.parse(JSON.stringify(date));
+console.log(parsedDate); // "날짜데이터" (문자열)
+
+5. JSON에서 지원하지 않는 데이터 타입
+
+JSON 표준(ECMA-404)에서 지원하지 않는 데이터 타입을 두 가지 이상 나열하세요.
+undefined, Symbol, Function
+
+6. 얕은 복사와 깊은 복사의 차이점
+
+얕은 복사와 깊은 복사의 차이를 간단하게 설명하세요.
+
+얕은 복사는 객체의 1차원 속성만 복사하며, 중첩 객체는 원본 객체와 참조를 공유합니다.
+깊은 복사는 객체의 모든 속성을 재귀적으로 복사하여 중첩 객체까지 복사본을 생성합니다.
+
+7. JSON.parse(JSON.stringify())와 깊은 복사
+
+JSON.parse(JSON.stringify()) 방식이 깊은 복사를 수행하지 못하는 경우를 설명하세요.
+객체 내에 undefined, Symbol, 또는 함수가 포함되어 있으면 복사되지 않습니다. 또한, 순환 참조 객체는 처리할 수 없습니다.
+
+8. 얕은 복사 방법
+
+얕은 복사를 수행할 수 있는 자바스크립트의 방법을 3가지 이상 나열하세요.
+Object.assign()
+Spread 연산자(...)
+Array.prototype.slice()
+
+9. 깊은 복사의 필요성
+
+깊은 복사가 필요한 상황을 예시로 설명하세요
+중첩된 객체나 배열을 별도로 수정해야 할 때 필요합니다.
+즉 복사된 객체의 중첩된 속성을 수정할 때 원본 객체에 영향을 미치지 않아야 하는 경우필요합니다.
+
+10. 깊은 복사 구현 방법
+
+JSON.parse(JSON.stringify()) 외에 깊은 복사를 수행할 수 있는 방법을 제시하세요.
+lodash 라이브러리의 cloneDeep() 메서드, 직접 재귀 함수
+
+11. Object.assign()의 한계
+
+Object.assign() 메서드를 사용한 얕은 복사의 한계를 설명하세요.
+Object.assign()은 얕은 복사만 수행하므로 중첩된 객체의 참조를 그대로 복사합니다. 
+중첩된 객체의 속성을 변경하면 원본 객체도 영향을 받습니다.
+
+12. 배열 복사 시의 spread 연산자
+
+다음 코드에서 originalArray와 copiedArray는 서로 독립적인 배열일까요?
+const originalArray = [1, 2, { a: 3 }];
+const copiedArray = [...originalArray];
+
+copiedArray[2].a = 4;
+
+
+copiedArray는 새로운 배열이지만, 배열 내부의 객체 { a: 3 }는 원본과 참조를 공유하고,
+copiedArray[2].a = 4는 originalArray[2].a에 영향을 줍니다.
+
+배열 내의 객체가 참조를 공유하기 때문에 독립적이지 않습니다.
+
+
+13. 재귀를 통한 깊은 복사
+
+깊은 복사를 수행하기 위한 재귀 복사 함수의 기본적인 원리를 설명하세요.
+
+1.자료형 검사 : 입력 값이 객체(Object)나 배열(Array)인지를 확인합니다. 단순 값인 경우 바로 반환합니다.
+2.새 객체 또는 배열 생성 : 복사할 값이 배열이면 빈 배열을, 객체이면 빈 객체를 생성합니다.
+3.재귀 호출: 객체나 배열의 각 속성을 순회하면서, 그 속성이 객체나 배열인 경우 재귀적으로 함수를 호출하여 깊은 복사를 수행합니다. 그렇지 않으면 값을 바로 복사합니다.
+4.복사 완료 후 반환: 모든 속성을 복사한 후 최종적으로 새로 생성된 객체나 배열을 반환합니다.
+
+14. JSON.stringify()의 함수 처리
+
+객체 내에 함수가 포함된 경우 JSON.stringify()로 직렬화하면 어떻게 처리할까요?
+
+해당 함수를 직렬화하지 않고 무시합니다.
+
+const 객체= { a: 1, b: function() {} };
+console.log(JSON.stringify(객체)); // '{"a":1}'
+
+15. 깊은 복사 후 객체 수정
+
+다음 코드에서 깊은 복사가 완료된 후, copy.b.c 값을 수정해도 original.b.c 값이 변경되지 않도록 하려면 어떻게 해야 할까요?
+const original = { a: 1, b: { c: 2 } };
+const copy = Object.assign({}, original);
+
+copy.b.c = 3;
+
+Object.assign()를  JSON.parse(JSON.stringify())로 변경하거나 다른 깊은 복사 방법을 사용해야 합니다.
+
+16. slice()와 얕은 복사
+
+배열에서 slice() 메서드로 얕은 복사를 수행할 때, 중첩 배열이 있는 경우 그 동작을 설명하세요.
+
+slice() 메서드는 1차원 배열에서는 얕은 복사를 수행합니다. 중첩 배열이 있을 경우, 내부 배열은 원본과 참조를 공유합니다.
+
+17. JSON.parse()의 반환 값
+
+JSON.parse('{"a":1, "b":true, "c":"hello"}')는 어떤 값을 반환할까요?
+
+자바스크립트 객체를 반환합니다.
+
+const result = JSON.parse('{"a":1, "b":true, "c":"hello"}');
+console.log(result); // { a: 1, b: true, c: "hello" }
+
+18. 깊은 복사 후 참조 확인
+
+깊은 복사된 배열과 원본 배열이 참조적으로 독립적인지 확인하려면 어떻게 해야 할까요?
+
+배열의 내부 요소를 변경하고, 원본 배열에 영향을 주는지 확인하면 됩니다.
+
+19. Symbol 타입의 직렬화
+
+Symbol 타입이 객체 속성으로 포함된 경우, JSON.stringify()는 어떻게 처리할까요?
+객체에 Symbol 타입이 포함된 경우, JSON.stringify()는 이를 무시합니다.
+
+const 객체 = { a: 1, [Symbol('a')]: 2 };
+console.log(JSON.stringify(객체)); // '{"a":1}'
+
+20. JSON.stringify()의 순환 참조 문제
+
+객체가 순환 참조(자기 자신을 참조)하는 경우 JSON.stringify()는 어떻게 동작할까요?
+TypeError: Converting circular structure to JSON 에러를 발생시킵니다.
+
+const 객체 = {};
+객체.self = 객체;
+JSON.stringify(객체); // Error: Converting circular structure to JSON
