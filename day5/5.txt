@@ -1,0 +1,512 @@
+Day 5 : 객체 지향 프로그래밍 및 함수형 프로그래밍 과제
+
+문제 1: 클래스와 객체의 개념 이해
+
+JavaScript에서 클래스를 정의하고, 해당 클래스를 사용하여 객체를 생성하는 방법을 설명하세요. 
+코드 예시를 포함해 주세요.
+
+JavaScript에서 클래스는 객체를 생성하기 위한 청사진으로, 객체의 속성과 메서드를 정의합니다. 
+객체는 클래스의 인스턴스입니다. ES6에서 class 키워드를 사용하여 클래스를 정의할 수 있습니다.
+
+class Animal {
+  constructor(species, sound) {
+    this.species = species;
+    this.sound = sound;
+  }
+
+  makeSound() {
+    console.log(`${this.species} makes a sound: ${this.sound}`);
+  }
+}
+
+const lion = new Animal('Lion', '어흥');
+const dog = new Animal('Dog', '멍멍');
+
+lion.makeSound(); // Lion makes a sound: 어흥
+dog.makeSound();  // Dog makes a sound: 멍멍
+
+1. Animal 클래스는 동물의 종(species)과 울음소리(sound)를 속성으로 가지고 있습니다. 
+2. makeSound() 메서드를 통해 각 동물이 내는 소리를 출력합니다. 
+3. lion과 dog라는 객체를 new 키워드를 사용하여 생성하고, 이 객체들에서 makeSound() 메서드를 호출하여 각각의 울음소리를 출력합니다.
+
+문제 2: 상속의 활용
+
+JavaScript에서 상속을 사용하여 클래스를 확장하는 방법을 설명하세요. 
+부모 클래스와 자식 클래스를 정의하고, 상속을 통해 재사용하는 예시 코드를 작성하세요.
+
+JavaScript에서 상속은 extends 키워드를 사용하여 부모 클래스의 기능을 자식 클래스가 재사용할 수 있게 합니다. 
+자식 클래스는 부모 클래스의 속성과 메서드를 물려받을 수 있으며, 필요한 경우 이를 확장하거나 변경할 수 있습니다.
+
+
+class Animal {
+  constructor(name) {
+    this.name = name;
+  }
+
+  makeSound() {
+    console.log(`${this.name} makes a sound.`);
+  }
+}
+
+class Dog extends Animal {
+  constructor(name, breed) 
+    super(name); 
+    this.breed = breed;
+  }
+
+  makeSound() {
+    console.log(`${this.name} 멍멍.`);
+  }
+}
+
+const dog = new Dog('망치', 'Yorkie');
+dog.makeSound(); // 망치 멍멍.
+
+이 예제에서 Dog 클래스는 Animal 클래스를 상속받아 name 속성과 makeSound 메서드를 재사용합니다. 
+Dog 클래스에서는 makeSound 메서드를 오버라이딩하여 개의 울음소리(멍멍)를 출력하도록 합니다.
+
+문제 3: 다형성의 개념
+
+다형성이란 무엇인가요? JavaScript에서 메서드 오버라이딩을 사용하여 다형성을 구현하는 방법을 설명하고, 관련 예시를 작성하세요.
+
+다형성(polymorphism)은 객체 지향 프로그래밍에서 같은 메서드 이름이지만 다른 클래스에서 다양한 방식으로 동작하는 것을 의미합니다. JavaScript에서는 메서드 오버라이딩을 통해 다형성을 구현할 수 있습니다. 이는 자식 클래스에서 부모 클래스의 메서드를 재정의하는 것을 의미합니다.
+
+class Animal {
+  makeSound() {
+    console.log("Some sound ...");
+  }
+}
+
+class Cat extends Animal {
+  makeSound() {
+    console.log("야옹");
+  }
+}
+
+class Dog extends Animal {
+  makeSound() {
+    console.log("멍멍");
+  }
+}
+
+const animals = [new Cat(), new Dog()];
+animals.forEach(animal => animal.makeSound()); 
+
+이 예제에서는 makeSound 메서드가 각 클래스에서 다르게 동작하는 것을 볼 수 있으며, 이를 통해 다형성을 구현합니다.
+
+문제 4: 추상화와 인터페이스
+
+추상화의 개념과 JavaScript에서 추상화를 구현하는 방법을 설명하세요. 
+추상 클래스를 만들고 이를 상속받는 클래스의 예시 코드를 작성하세요.
+
+추상화는 객체의 중요한 특징을 강조하고, 불필요한 세부 사항을 숨기는 과정입니다. 
+JavaScript에서는 추상 클래스를 명시적으로 제공하지 않지만, 이를 구현하기 위해 부모 클래스에 공통 메서드를 정의하고, 
+자식 클래스에서 이를 재정의(오버라이딩)할 수 있습니다.
+
+class Animal {
+  constructor(name) {
+    if (this.constructor === Animal) {
+      throw new Error("Abstract class 'Animal' cannot be instantiated directly.");
+    }
+    this.name = name;
+  }
+
+  makeSound() {
+    throw new Error("Abstract method 'makeSound' must be implemented by subclasses.");
+  }
+}
+
+class Cat extends Animal {
+  makeSound() {
+    console.log(`${this.name} says: 야옹`);
+  }
+}
+
+class Dog extends Animal {
+  makeSound() {
+    console.log(`${this.name} says: 멍멍`);
+  }
+}
+
+const cat = new Cat('고양이');
+const dog = new Dog('강아지');
+
+cat.makeSound();  // 고양이 says: 야옹
+dog.makeSound();  // 강아지 says: 멍멍
+
+
+Animal 클래스 (추상 클래스 역할): Animal 클래스는 직접 인스턴스화할 수 없도록 설계되었습니다. 
+(Abstract class 'Animal' cannot be instantiated directly)
+
+makeSound() 메서드는 추상 메서드로 설정되어 있어, 자식 클래스에서 반드시 구현해야 합니다.
+(Abstract method 'makeSound' must be implemented by subclasses.)
+
+Cat 클래스와 Dog 클래스: 이 클래스들은 Animal 클래스를 상속받아 각자 고유한 방식으로 makeSound() 메서드를 구현합니다. Cat은 "야옹", Dog는 "멍멍" 소리를 냅니다.
+
+추상화 구현: 
+1. Animal 클래스는 구체적인 동작을 정의하지 않고, 공통된 구조만 제공합니다. 
+2. 실제 동작은 Cat과 Dog처럼 구체적인 동물 클래스에서 정의됩니다. 
+3. 동물이라는 추상 개념을 표현하면서, 구체적인 동물들의 소리는 각각의 클래스에서 정의됩니다.
+
+
+문제 5: 생성자 함수와 객체 생성
+
+JavaScript에서 생성자 함수의 역할은 무엇인가요? 
+생성자를 사용하여 객체를 초기화하는 예시를 작성하세요.
+
+생성자 함수는 객체를 초기화하는 데 사용되며, new 키워드를 사용하여 호출됩니다. 
+생성자 함수 내에서 this는 생성될 객체를 가리키며, 이 객체에 속성이나 메서드를 추가할 수 있습니다.
+
+
+function Animal(name, sound) {
+  this.name = name;
+  this.sound = sound;
+
+  this.makeSound = function() {
+    console.log(`${this.name} makes a sound: ${this.sound}`);
+  };
+}
+
+const lion = new Animal('Lion', '어흥');
+lion.makeSound(); // Lion makes a sound: 어흥
+
+Animal 생성자 함수를 사용하여 객체를 초기화하고, lion 객체에서 makeSound() 메서드를 호출합니다.
+
+문제 6: Getter와 Setter 메서드
+
+JavaScript에서 Getter와 Setter 메서드를 사용하여 객체의 속성에 접근하고 수정하는 방법을 설명하세요. 
+관련 예시를 작성하세요.
+
+Getter와 Setter 메서드는 객체의 속성 값을 안전하게 접근하고 수정할 수 있는 방법을 제공합니다. get 키워드를 사용하여 속성을 읽을 수 있고, set 키워드를 사용하여 속성을 수정할 수 있습니다.
+
+class Animal {
+  constructor(name) {
+    this._name = name;
+  }
+
+  get name() {
+    return this._name;
+  }
+
+  set name(newName) {
+    if (newName.length > 0) {
+      this._name = newName;
+    } else {
+      console.log("유효하지 않습니다.");
+    }
+  }
+}
+
+const cat = new Animal('고양이');
+console.log(cat.name); // 고양이
+cat.name = '냥이';
+console.log(cat.name); // 냥이
+cat.name = ''; // 유효하지 않습니다.
+
+
+문제 7: 함수형 프로그래밍의 특징
+
+함수형 프로그래밍의 주요 특징과 장점을 설명하세요. 
+순수 함수, 불변성, 고차 함수의 개념을 포함하여 답변하세요.
+
+함수형 프로그래밍(Functional Programming, FP)은 함수가 일급 시민으로 취급되며, 
+상태의 변화를 피하고, 순수 함수와 고차 함수 등을 사용하는 프로그래밍 패러다임입니다. 
+
+특징:
+순수 함수(Pure Function): 같은 입력에 대해 항상 같은 출력을 반환하고, 함수 외부의 상태를 변경하지 않습니다.
+
+불변성(Immutability): 데이터는 변경되지 않으며, 변경이 필요할 때는 기존 데이터를 복사하여 새로운 데이터를 만듭니다.
+
+고차 함수(Higher-Order Functions): 함수를 인수로 받거나 함수를 반환하는 함수입니다.
+
+장점:
+1.코드가 예측 가능하고 디버깅이 쉬움.
+2.병렬 처리가 용이함.
+3.상태 변화가 적어 코드 유지보수가 용이함.
+
+문제 8: 순수 함수와 부수 효과
+
+순수 함수와 부수 효과의 차이를 설명하세요. 
+순수 함수의 예시와 부수 효과가 있는 함수의 예시를 작성하세요.
+
+순수 함수는 동일한 입력에 대해 항상 동일한 출력을 반환하며, 함수 외부의 상태를 변경하지 않습니다. 
+반면, 부수 효과(Side Effect)는 함수가 외부 상태를 변경하거나 입력과 관계없이 외부 환경에 영향을 미치는 경우를 말합니다.
+
+순수 함수 예시:
+
+const getAnimalSound = (animal) => `${animal.name} makes a sound: ${animal.sound}`;
+
+const cat = { name: '고양이', sound: '야옹' };
+console.log(getAnimalSound(cat)); // 고양이 makes a sound: 야옹
+
+이 함수는 동일한 입력(고양이,야옹)에 대해 항상 같은 결과(고양이 makes a sound: 야옹)를 반환하며, 외부 상태를 변경하지 않으므로 순수 함수입니다.
+
+
+부수 효과가 있는 함수 예시:
+
+let count = 0;
+
+function increment() {
+  count += 1;
+}
+이 함수는 외부 변수 count를 변경하므로, 부수 효과가 발생하는 함수입니다.
+
+
+문제 9: 고차 함수의 활용
+
+JavaScript에서 고차 함수란 무엇인가요? 
+map, filter, reduce 함수의 사용 예시를 각각 작성하세요.
+
+고차 함수는 함수를 인수로 받거나 함수를 반환하는 함수를 말합니다. 
+
+map 예시:
+const numbers = [1, 2, 3, 4];
+const doubled = numbers.map(n => n * 2);
+console.log(doubled); // [2, 4, 6, 8]
+
+filter 예시:
+const numbers = [1, 2, 3, 4, 5];
+const evenNumbers = numbers.filter(n => n % 2 === 0);
+console.log(evenNumbers); // [2, 4]
+
+reduce 예시:
+const numbers = [1, 2, 3, 4];
+const sum = numbers.reduce((acc, curr) => acc + curr, 0);
+console.log(sum); // 10
+
+문제 10: 불변성 유지
+
+불변성을 유지하는 방법을 설명하고, JavaScript에서 Spread 연산자를 사용하여 객체나 배열의 불변성을 유지하는 예시 코드를 작성하세요.
+
+불변성을 유지하기 위해 기존 객체나 배열을 직접 수정하지 않고, 변경할 내용을 반영한 새로운 객체나 배열을 생성합니다. 
+JavaScript에서는 Spread 연산자(...)를 사용하여 쉽게 불변성을 유지할 수 있습니다.
+
+배열 예시:
+const arr = [1, 2, 3];
+const newArr = [...arr, 4];
+console.log(newArr); // [1, 2, 3, 4]
+
+객체 예시:
+const animal = { name: '고양이', sound: '야옹' };
+const updatedAnimal = { ...animal, name: '애옹이' }; 
+console.log(updatedAnimal); 
+console.log(animal); 
+
+문제 11: 커링(Currying)
+
+커링의 개념을 설명하고, 커링을 적용한 함수의 예시를 작성하세요.
+
+커링(Currying)은 하나의 함수가 여러 개의 인수를 받는 대신, 인수를 하나씩 받는 여러 함수로 분리되는 것을 의미합니다. 
+이는 함수 조합과 재사용성을 높이는 데 유용합니다.
+
+const makeAnimalSound = name => sound => `${species} makes a sound: ${sound}`;
+
+const catSound = makeAnimalSound('고양이');
+console.log(catSound('야옹')); 
+const dogSound = makeAnimalSound('강아지');
+console.log(dogSound('멍멍')); 
+
+이코드에서는 makeAnimalSound가 커링된 함수로, 
+첫 번째 인수로 동물의 종(species)을, 두 번째 인수로 동물의 소리를 받습니다.
+
+문제 12: 함수 합성
+
+함수 합성의 개념을 설명하고, 두 개 이상의 함수를 결합하여 새로운 함수를 만드는 예시를 작성하세요.
+
+함수 합성은 여러 함수를 합하여 하나의 새로운 함수를 만드는 것입니다. .
+
+const makeAnimalName = species => `Animal: ${species}`;
+const makeAnimalSound = sound => `Sound: ${sound}`;
+
+const describeAnimal = (species, sound) => `${makeAnimalName(species)} ${makeAnimalSound(sound)}`;
+
+console.log(soundAnimal('고양이', '야옹')); 
+// 출력: Animal: 고양이 Sound: 야옹
+
+
+문제 13: 모나드의 저주
+
+모나드의 저주란 무엇인가요? 
+모나드를 이해하고 설명하기 어려운 이유를 설명하고, 모나드의 개념을 비유적으로 설명해 보세요.
+
+모나드의 저주는 모나드의 개념이 실제 코딩환경에서는 이해하기 쉽지만, 
+이를 설으로 이해하기 어렵다는 것을 의미합니다. 
+
+모나드를 설명할 때 수학적 용어와 개념이 복잡하게 얽혀 있어 많은 사람들이 모나드를 처음 접할 때 큰 어려움을 겪습니다.
+
+모나드를 과사상자에 비유하여 설명해 보겠습니다.
+
+과자장사(모나드): 모나드는 과자(값)를 안전하게 담고 운반하는 역할을 합니다. 
+값 자체를 바로 사용할 수 있는 것이 아니라, 안전한 상자안에 담겨있다는 것이 중요합니다.
+
+과자(값): 상자 안에 있는 과자가 모나드 내부의 값입니다. 
+이 값은 직접적으로 사용되지 않고, 모나드를 통해 제어되며 다루어집니다.
+
+상자에서 과자를 꺼내기(모나드 내부의 값을 꺼내기): 과자를 꺼내려면 적절한 방법(모나드 연산)을 사용해야 합니다. 예를들어 과자상자가 뿌셔뿌셔라면 부숴먹지만 다른과자는 그렇지않지요?
+
+여러 개의 과자상자가 있는 경우
+여러 개의 과자상자(모나드)를 다룰 때는 이과자가 무엇인지 알기 위해 과자상자에 그림을 그리거나 설명을 붙여 간식을 정확하게 전달할 수 있어야 합니다. 
+과자상자들은 각기 다른 과자들을 담고 있을 수 있기 때문에, 안전하게 처리하는 규칙(모나드의 법칙과 연산)을 따라야 합니다.
+
+모나드는 이러한 규칙들을 통해 데이터나 값을 안전하게 처리하고, 부수 효과를 제어하는 기능을 합니다. 
+모나드를 통해 우리는 데이터를 안전하게 다루고, 예측 가능한 방식으로 프로그래밍을 할 수 있게 됩니다.
+
+문제 14: 재귀 함수의 활용
+
+재귀 함수의 개념을 설명하고, 팩토리얼을 계산하는 재귀 함수의 예시를 작성하세요.
+
+재귀 함수는 함수가 자기 자신을 호출하는 함수입니다. 
+일반적으로 재귀 함수에는 종료 조건이 필요하며, 그렇지 않으면 무한 루프에 빠질 수 있습니다.
+
+팩토리얼 계산 재귀 함수 예시:
+function factorial(n) {
+  if (n === 0) {
+    return 1;
+  }
+  return n * factorial(n - 1);
+}
+
+console.log(factorial(5)); // 120
+
+이 예제에서 factorial 함수는 n이 0이 될 때까지 자기 자신을 호출하며, 팩토리얼 값을 계산합니다.
+
+문제 15: 객체 지향 프로그래밍과 함수형 프로그래밍 비교
+
+객체 지향 프로그래밍(OOP)과 함수형 프로그래밍(FP)의 차이점을 설명하세요. 두 패러다임의 장단점을 비교하세요.
+
+객체 지향 프로그래밍(OOP)은 객체를 기반으로 프로그래밍하는 패러다임으로, 객체 간의 상호작용을 통해 문제를 해결합니다. 
+주로 상태와 메서드를 가진 객체를 조작합니다.
+
+함수형 프로그래밍(FP)은 함수와 불변성을 강조하는 패러다임으로, 함수가 일급 시민으로 취급되며, 부수 효과가 없는 순수 함수를 사용하여 상태 변화를 최소화합니다.
+
+OOP의 장점:
+
+코드가 직관적이며, 객체 간 상호작용을 쉽게 이해할 수 있습니다.
+상속과 다형성 같은 개념을 통해 코드 재사용이 용이합니다.
+
+OOP의 단점:
+
+상태 관리가 복잡해질 수 있으며, 특히 객체의 상태가 변경되면 버그가 발생할 가능성이 큽니다.
+
+FP의 장점:
+
+불변성으로 인해 코드의 안정성이 높고, 병렬 처리가 용이합니다.
+상태 변화가 적어 디버깅과 유지보수가 용이합니다.
+
+FP의 단점:
+
+복잡한 로직을 표현할 때 코드가 이해하기 어려울 수 있습니다.
+객체 지향적인 문제를 해결하기에는 적합하지 않을 수 있습니다.
+
+문제 16: 오버라이딩과 오버로딩의 차이
+
+오버라이딩(Overriding)과 오버로딩(Overloading)의 차이점을 설명하고, JavaScript에서 오버라이딩을 구현한 예시를 작성하세요.
+
+오버라이딩(Overriding)은 자식 클래스가 부모 클래스의 메서드를 재정의하는 것을 의미합니다. 
+JavaScript에서 주로 클래스 상속 시에 사용됩니다. 
+
+오버로딩(Overloading)은 동일한 이름의 메서드가 서로 다른 매개변수 목록을 가지는 것을 의미하지만, 
+JavaScript에서는 기본적으로 메서드 오버로딩을 지원하지 않습니다.
+
+오버라이딩 예시:
+
+class Animal {
+  makeSound() {
+    console.log("The animal makes a sound.");
+  }
+}
+
+class Dog extends Animal {
+  makeSound() {
+    console.log("멍멍");
+  }
+}
+
+const dog = new Dog();
+dog.makeSound(); // 멍멍
+
+Dog 클래스는 Animal 클래스의 makeSound 메서드를 오버라이딩하여 멍멍을 출력합니다.
+
+문제 17: 함수형 프로그래밍에서의 상태 관리
+
+함수형 프로그래밍에서 상태 관리는 어떻게 이루어지나요? 상태 변화를 최소화하고 불변성을 유지하는 방법을 설명하세요.
+
+함수형 프로그래밍에서 상태 관리는 불변성에 기반합니다. 
+상태를 직접 변경하지 않고, 상태가 변경될 때마다 새로운 상태를 복사하여 반환합니다. 
+이를 통해 상태 변화로 인한 부작용을 줄이고, 코드의 예측 가능성을 높입니다.
+
+상태 변화를 최소화하는 방법으로는 다음과 같습니다:
+
+1. 상태를 직접 수정하지 않고 복사본을 만들기
+2. 순수 함수만 사용하여 상태 변경을 제어하기
+3 .고차 함수를 사용하여 상태 관리 로직을 재사용
+
+const animal = { name: '고양이', sound: '야옹' };
+
+const updateAnimal = (animal, newName) => {
+  return { ...animal, name: newName }; // 불변성 유지
+};
+
+const updatedAnimal = updateAnimal(animal, '애옹이');
+console.log(updatedAnimal); // { name: '애옹이', sound: '야옹' }
+console.log(animal); // { name: '고양이', sound: '야옹' }
+
+이코드는 새 객체를 반환하여 상태를 관리합니다.
+
+문제 18: 프로토타입 상속
+
+JavaScript에서 프로토타입 상속이란 무엇인가요? 
+프로토타입을 사용하여 객체 간 상속을 구현하는 방법을 설명하고, 예시 코드를 작성하세요.
+
+JavaScript에서 프로토타입 상속은 객체가 다른 객체의 속성과 메서드를 상속받는 것을 의미합니다. 
+모든 JavaScript 객체는 내부적으로 __proto__라는 숨겨진 속성을 가지고 있으며, 이 속성을 통해 다른 객체로부터 상속받을 수 있습니다.
+
+프로토타입 상속 예시:
+
+function Animal(name) {
+  this.name = name;
+}
+
+Animal.prototype.makeSound = function() {
+  console.log(`${this.name} makes a sound.`);
+};
+
+function Dog(name) {
+  Animal.call(this, name);
+}
+
+Dog.prototype = Object.create(Animal.prototype);
+Dog.prototype.constructor = Dog;
+
+Dog.prototype.makeSound = function() {
+  console.log(`${this.name} 멍멍.`);
+};
+
+const dog = new Dog('망치');
+dog.makeSound(); // 망치 멍멍.
+
+Dog는 Animal을 상속받아 프로토타입 체인을 통해 메서드를 공유합니다.
+
+문제 19: Todo 리스트 함수형 프로그래밍 예제
+
+함수형 프로그래밍의 개념을 활용하여 간단한 Todo 리스트 애플리케이션을 구현하세요. 
+항목 추가, 삭제, 완료 처리를 순수 함수로 구현하는 코드를 작성하세요.
+
+함수형 프로그래밍에서는 상태 변화를 최소화하고 순수 함수를 사용하여 데이터를 처리합니다. 
+이를 바탕으로 간단한 Todo 리스트를 구현할 수 있습니다.
+
+const addAnimal = (animals, newAnimal) => [...animals, { name: newAnimal, completed: false }];
+
+const removeAnimal = (animals, index) => animals.filter((_, i) => i !== index);
+
+const toggleAnimal = (animals, index) => 
+  animals.map((animal, i) => (i === index ? { ...animal, completed: !animal.completed } : animal));
+
+let animals = [];
+animals = addAnimal(animals, '고양이');
+animals = addAnimal(animals, '강아지');
+animals = toggleAnimal(animals, 0);
+animals = removeAnimal(animals, 1);
+
+console.log(animals);
+
