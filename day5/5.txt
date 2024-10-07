@@ -49,7 +49,7 @@ class Animal {
 }
 
 class Dog extends Animal {
-  constructor(name, breed) 
+  constructor(name, breed) {
     super(name); 
     this.breed = breed;
   }
@@ -61,7 +61,6 @@ class Dog extends Animal {
 
 const dog = new Dog('망치', 'Yorkie');
 dog.makeSound(); // 망치 멍멍.
-
 이 예제에서 Dog 클래스는 Animal 클래스를 상속받아 name 속성과 makeSound 메서드를 재사용합니다. 
 Dog 클래스에서는 makeSound 메서드를 오버라이딩하여 개의 울음소리(멍멍)를 출력하도록 합니다.
 
